@@ -105,6 +105,13 @@ def branch_filter(current_branch: str, branch_patterns: List[str]) -> bool:
 def if_not_empty(s: Optional[str]) -> Optional[str]: return None if s is None or s == '' else s
 
 
+def remove_prefixes(s: str, prefixes: List[str]) -> str:
+    for prefix in prefixes:
+        if s.startswith(prefix):
+            s = s[len(prefix):]
+    return s
+
+
 if __name__ == '__main__':
     notify(
         custom=if_not_empty(os.getenv("JB_SPACE_PARAM_CUSTOM")),
@@ -113,7 +120,7 @@ if __name__ == '__main__':
         members=[i for i in (os.getenv("JB_SPACE_PARAM_RECIPIENT_MEMBER") or '').split(',') if i != ''],
         client_id=bytes(os.getenv("JB_SPACE_CLIENT_ID"), 'UTF-8'),
         client_secret=bytes(os.getenv("JB_SPACE_CLIENT_SECRET"), 'UTF-8'),
-        space_url='https://' + os.getenv("JB_SPACE_URL").rstrip('/').removeprefix('https://').removeprefix('http://'),
+        space_url='https://' + remove_prefixes(os.getenv("JB_SPACE_URL"), prefixes=['https://', 'http://']),
         event=os.getenv("JB_SPACE_PARAM_EVENT"),
         current_branch=os.getenv("CIRCLE_BRANCH"),
         branch_patterns=os.getenv("JB_SPACE_PARAM_BRANCH_PATTERN").split(',')
