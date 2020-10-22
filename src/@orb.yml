@@ -1,5 +1,7 @@
 version: 2.1
 
 description: >
-  Implement event-based notifications across all of your CI/CD pipelines. Utilizing built-in message templates or JetBrains Space HTTP API Playground "UI Preview" tab, create and customize notifications specific to your organization's needs.
+  Implement event-based notifications across all of your CI/CD pipelines.
+  Utilizing built-in message templates or JetBrains Space HTTP API Playground "UI Preview" tab,
+  create and customize notifications specific to your organization's needs.
   Largely based on `circleci/slack` orb.
