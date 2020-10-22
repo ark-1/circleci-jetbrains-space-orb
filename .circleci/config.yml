@@ -29,7 +29,7 @@ jobs:
       - checkout
       - run:
           working_directory: src/scripts
-          command: python -m unittest notify_tests.py
+          command: python -m unittest tests/notify_tests.py
 
   # Define one or more jobs which will utilize your orb's commands and parameters to validate your changes.
   integration-test-1:
