@@ -19,7 +19,7 @@ def build_message_body(custom: Optional[str], template: Optional[str]) -> str:
     if custom is not None:
         t2 = substitute_envs(custom)
     elif template is not None:
-        t2 = substitute_envs(substitute_envs(template))
+        t2 = substitute_envs(substitute_envs("$" + template))
     else:
         raise ValueError("Error: No message template selected. "
                          "Select either a custom template "
