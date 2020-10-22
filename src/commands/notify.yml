@@ -68,4 +68,4 @@ steps:
         success_tagged_deploy_1: "<<include(message_templates/success_tagged_deploy_1.json)>>"
         basic_on_hold_1: "<<include(message_templates/basic_on_hold_1.json)>>"
         python_script: "<<include(scripts/notify.py)>>"
-      command: python3 <<< "$python_script"
+      command: python3 \<<< "$python_script"
