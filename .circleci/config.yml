@@ -53,18 +53,22 @@ workflows:
           exclude: SC2148
       # optional: Run python tests against your scripts
       - python_test
-      - hold-for-dev-publish:
+      # - hold-for-dev-publish:
           # type: approval
+          # requires:
+            # - orb-tools/lint
+            # - orb-tools/pack
+            # - python_test
+            # - shellcheck/check
+      # Publish development version(s) of the orb.
+      - orb-tools/publish-dev:
+          orb-name: ark-1/jetbrains-space-orb
+          context: orb-publishing # A restricted context containing your private publishing credentials. Will only execute if approved by an authorized user.
           requires:
             - orb-tools/lint
             - orb-tools/pack
             - python_test
             - shellcheck/check
-      # Publish development version(s) of the orb.
-      - orb-tools/publish-dev:
-          orb-name: ark-1/jetbrains-space-orb
-          context: orb-publishing # A restricted context containing your private publishing credentials. Will only execute if approved by an authorized user.
-          requires: [hold-for-dev-publish]
       # Trigger an integration workflow to test the
       # dev:${CIRCLE_SHA1:0:7} version of your orb
       - orb-tools/trigger-integration-tests-workflow:
