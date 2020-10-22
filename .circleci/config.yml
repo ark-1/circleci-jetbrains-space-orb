@@ -5,7 +5,6 @@ orbs:
   jetbrains-space-orb: ark-1/jetbrains-space-orb@<<pipeline.parameters.dev-orb-version>>
   orb-tools: circleci/orb-tools@10.0
   shellcheck: circleci/shellcheck@2.0
-  python: circleci/python@1.2.0
 
 # Pipeline Parameters
 ## These parameters are used internally by orb-tools. Skip to the Jobs section.
@@ -78,25 +77,25 @@ workflows:
   # when the run-integration-tests pipeline parameter is set to true.
   # It is meant to be triggered by the "trigger-integration-tests-workflow"
   # job, and run tests on <your orb>@dev:${CIRCLE_SHA1:0:7}.
-  integration-test_deploy:
-    when: false
-    jobs:
-      # Run any integration tests defined within the `jobs` key.
-      - integration-test-1
-      # Publish a semver version of the orb. relies on
-      # the commit subject containing the text "[semver:patch|minor|major|skip]"
-      # as that will determine whether a patch, minor or major
-      # version will be published or if publishing should
-      # be skipped.
-      # e.g. [semver:patch] will cause a patch version to be published.
-      - orb-tools/dev-promote-prod-from-commit-subject:
-          orb-name: ark-1/jetbrains-space-orb
-          context: orb-publishing
-          add-pr-comment: false
-          fail-if-semver-not-indicated: true
-          publish-version-tag: false
-          requires:
-            - integration-test-1
-          filters:
-            branches:
-              only: master
+  #  integration-test_deploy:
+  #    when: false
+  #    jobs:
+  #      # Run any integration tests defined within the `jobs` key.
+  #      - integration-test-1
+  #      # Publish a semver version of the orb. relies on
+  #      # the commit subject containing the text "[semver:patch|minor|major|skip]"
+  #      # as that will determine whether a patch, minor or major
+  #      # version will be published or if publishing should
+  #      # be skipped.
+  #      # e.g. [semver:patch] will cause a patch version to be published.
+  #      - orb-tools/dev-promote-prod-from-commit-subject:
+  #          orb-name: ark-1/jetbrains-space-orb
+  #          context: orb-publishing
+  #          add-pr-comment: false
+  #          fail-if-semver-not-indicated: true
+  #          publish-version-tag: false
+  #          requires:
+  #            - integration-test-1
+  #          filters:
+  #            branches:
+  #              only: master
