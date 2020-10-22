@@ -54,7 +54,7 @@ workflows:
       # optional: Run python tests against your scripts
       - python_test
       - hold-for-dev-publish:
-          type: approval
+          # type: approval
           requires:
             - orb-tools/lint
             - orb-tools/pack
