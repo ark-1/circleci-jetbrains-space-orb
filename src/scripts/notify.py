@@ -24,6 +24,8 @@ def build_message_body(custom: Optional[str], template: Optional[str]) -> str:
         raise ValueError("Error: No message template selected. "
                          "Select either a custom template "
                          "or one of the pre-included ones via the 'custom' or 'template' parameters.")
+    print('Message body:')
+    print(t2)
     return t2
 
 
