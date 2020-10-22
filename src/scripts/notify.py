@@ -36,7 +36,7 @@ def post_to_jb_space(msg: str, channels: List[str], members: List[str], client_i
 
     auth_response = subprocess.check_output(
         'curl -s -f -X POST -H "Authorization: Basic ' +
-        str(base64.b64encode(client_id + b':' + client_secret)) +
+        base64.b64encode(client_id + b':' + client_secret).decode('UTF-8') +
         '" -d "grant_type=client_credentials&scope=**" ' + space_url + '/oauth/token',
         shell=True, text=True
     )
