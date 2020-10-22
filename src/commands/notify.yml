@@ -1,0 +1,71 @@
+description: Notify a JetBrains Space channel with a custom message.
+
+parameters:
+  template:
+    description: "Use one of the built-in templates. Select the template name. "
+    type: string
+    default: ""
+  custom:
+    description: |
+      Enter a custom message template.
+      1. Open HTTP API Playground in Space (in the sidebar).
+      2. Find "Chats / Channels / Send Message" endpoint and create your message template using UI preview tab.
+      3. Insert any desired environment variables.
+      4. Paste value here.
+    type: string
+    default: ""
+  event:
+    description: |
+      In what event should this message send? Options: ["fail", "pass", "always"]
+    type: enum
+    enum: ["fail", "pass", "always"]
+    default: "always"
+  branch_pattern:
+    description: |
+      A comma separated list of regex matchable branch names. Notifications will only be sent if sent from a job from these branches. By default ".+" will be used to match all branches. Pattern must match the full string, no partial matches.
+    type: string
+    default: ".+"
+  # TODO support mentions
+  channel:
+    description: |
+      Select name of channel in which to post to. You may include a comma separated list of channel names s if you wish
+      to post to multiple channels at once.
+      Set the "JB_SPACE_DEFAULT_CHANNEL" environment variable for the default channel.
+    type: string
+    default: $JB_SPACE_DEFAULT_CHANNEL
+  recipient_member:
+    description: |
+      Select username of member to whom to send notification. You may include a comma separated list of usernames if you
+      wish to send notifications to multiple members at once.
+      Set the "$JB_SPACE_DEFAULT_RECIPIENT" environment variable for the default recipient member.
+    type: string
+    default: $JB_SPACE_DEFAULT_RECIPIENT_MEMBER
+
+steps:
+  - run:
+      when: on_fail
+      name: JetBrains Space - Detecting Job Status (FAIL)
+      command: |
+        echo 'fail' > /tmp/JB_SPACE_JOB_STATUS
+  - run:
+      when: on_success
+      name: JetBrains Space - Detecting Job Status (PASS)
+      command: |
+        echo 'pass' > /tmp/JB_SPACE_JOB_STATUS
+  - run:
+      when: always
+      name: JetBrains Space - Sending Notification
+      environment:
+        JB_SPACE_PARAM_EVENT: "<<parameters.event>>"
+        JB_SPACE_PARAM_TEMPLATE: "<<parameters.template>>"
+        JB_SPACE_PARAM_CUSTOM: "<<parameters.custom>>"
+        # JB_SPACE_PARAM_MENTIONS: "<<parameters.mentions>>"
+        JB_SPACE_PARAM_BRANCH_PATTERN: "<<parameters.branch_pattern>>"
+        JB_SPACE_PARAM_CHANNEL_NAME: "<<parameters.channel>>"
+        JB_SPACE_PARAM_RECIPIENT_MEMBER: "<<parameters.recipient_member>>"
+        # import pre-built templates using the orb-pack local script include.
+        basic_fail_1: "<<include(message_templates/basic_fail_1.json)>>"
+        success_tagged_deploy_1: "<<include(message_templates/success_tagged_deploy_1.json)>>"
+        basic_on_hold_1: "<<include(message_templates/basic_on_hold_1.json)>>"
+        python_script: "<<include(scripts/notify.py)>>"
+      command: python3 <<< "$python_script"

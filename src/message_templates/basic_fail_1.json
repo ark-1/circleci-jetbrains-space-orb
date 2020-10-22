@@ -1,0 +1,38 @@
+{
+  "className": "ChatMessage.Block",
+  "style": "ERROR",
+  "sections": [
+    {
+      "className": "MessageSection",
+      "elements": [
+        {
+          "className": "MessageText",
+          "accessory": {
+            "className": "MessageImage",
+            "src": "https://assets.brandfolder.com/otz5mn-bw4j2w-6jzqo8/original/circle-logo-badge-black.png"
+          },
+          "content": "Your job **${CIRCLE_JOB}** has failed"
+        },
+        {
+          "className": "MessageFields",
+          "fields": [
+            {
+              "className": "MessageField",
+              "first": "**Commiter**:",
+              "second": "${CIRCLE_USERNAME}"
+            },
+            {
+              "className": "MessageField",
+              "first": "**SHA**:",
+              "second": "${CIRCLE_SHA1}"
+            }
+          ]
+        },
+        {
+          "className": "MessageText",
+          "content": "[View Job](${CIRCLE_BUILD_URL})"
+        }
+      ]
+    }
+  ]
+}

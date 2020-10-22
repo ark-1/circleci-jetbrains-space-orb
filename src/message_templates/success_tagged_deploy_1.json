@@ -1,0 +1,43 @@
+{
+  "className": "ChatMessage.Block",
+  "style": "SUCCESS",
+  "sections": [
+    {
+      "className": "MessageSection",
+      "elements": [
+        {
+          "className": "MessageText",
+          "accessory": {
+            "className": "MessageImage",
+            "src": "https://assets.brandfolder.com/otz5mn-bw4j2w-6jzqo8/original/circle-logo-badge-black.png"
+          },
+          "content": "Deployment Successful! 🎉"
+        },
+        {
+          "className": "MessageFields",
+          "fields": [
+            {
+              "className": "MessageField",
+              "first": "**Project**:",
+              "second": "$CIRCLE_PROJECT_REPONAME"
+            },
+            {
+              "className": "MessageField",
+              "first": "**When**:",
+              "second": "$(date +'%m/%d/%Y %T')"
+            },
+            {
+              "className": "MessageField",
+              "first": "**Tag**:",
+              "second": "$CIRCLE_TAG"
+            }
+          ]
+        },
+        {
+          "className": "MessageText",
+          "content": "[View Job](${CIRCLE_BUILD_URL})"
+        }
+      ]
+    }
+  ]
+}
