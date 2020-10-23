@@ -71,22 +71,23 @@ steps:
         basic_on_hold_1: "<<include(message_templates/basic_on_hold_1.json)>>"
         python_script: "<<include(scripts/notify.py)>>"
       command: |
-        if uname -a | grep Darwin > /dev/null 2>&1; then
-            echo "Checking For python3: MacOS"
-            command -v jq >/dev/null 2>&1 || HOMEBREW_NO_AUTO_UPDATE=1 brew install python3 --quiet
-            return $?
+        InstallPython() {
+          if uname -a | grep Darwin > /dev/null 2>&1; then
+              echo "Checking For python3: MacOS"
+              command -v jq >/dev/null 2>&1 || HOMEBREW_NO_AUTO_UPDATE=1 brew install python3 --quiet
+              return $?
+          elif cat /etc/issue | grep Debian > /dev/null 2>&1 || cat /etc/issue | grep Ubuntu > /dev/null 2>&1; then
+              echo "Checking For python3: Debian"
+              if [ "$(id -u)" = 0 ]; then export SUDO=""; else # Check if we're root
+                  export SUDO="sudo";
+              fi
+              command -v jq >/dev/null 2>&1 || { $SUDO apt -qq update && $SUDO apt -qq install -y python3; }
+              return $?
 
-        elif cat /etc/issue | grep Debian > /dev/null 2>&1 || cat /etc/issue | grep Ubuntu > /dev/null 2>&1; then
-            echo "Checking For python3: Debian"
-            if [ "$(id -u)" = 0 ]; then export SUDO=""; else # Check if we're root
-                export SUDO="sudo";
-            fi
-            command -v jq >/dev/null 2>&1 || { $SUDO apt -qq update && $SUDO apt -qq install -y python3; }
-            return $?
-
-        elif cat /etc/issue | grep Alpine > /dev/null 2>&1; then
-            echo "Checking For python3: Alpine"
-            command -v python3 >/dev/null 2>&1 || { echo >&2 "JETBRAINS SPACE ORB ERROR: python3 is required. Please install."; exit 1; }
-            return $?
-        fi
-        python3 \<<< "$python_script"
+          elif cat /etc/issue | grep Alpine > /dev/null 2>&1; then
+              echo "Checking For python3: Alpine"
+              command -v python3 >/dev/null 2>&1 || { echo >&2 "JETBRAINS SPACE ORB ERROR: python3 is required. Please install."; exit 1; }
+              return $?
+          fi
+        }
+        InstallPython && python3 \<<< "$python_script"
