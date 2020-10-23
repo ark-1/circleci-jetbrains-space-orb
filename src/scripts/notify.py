@@ -48,7 +48,7 @@ def post_to_jb_space(msg: str, channels: List[str], members: List[str], client_i
     msg_loaded = json.loads(msg)
 
     def send_msg(recipient):
-        body = json.dumps({'recipient': recipient, 'content': msg_loaded})
+        body = json.dumps({'recipient': recipient, 'content': msg_loaded, 'unfurlLinks': False})
         subprocess.check_output(
             'curl -s -f -X POST -H "Authorization: Bearer ' + token + '" -d \'' + body.replace("'", "'\\''") +
             "' " + space_url + '/api/http/chats/messages/send-message',
