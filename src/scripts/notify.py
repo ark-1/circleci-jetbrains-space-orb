@@ -11,7 +11,9 @@ def substitute_envs(s: str) -> str:
         .replace('\\n', '\\\\n') \
         .replace('|', '\\|') \
         .replace('<', '\\<') \
-        .replace('>', '\\>')
+        .replace('>', '\\>') \
+        .replace('(', '\\(') \
+        .replace(')', '\\)')
     return subprocess.check_output('eval echo -n $JS_SPACE_ORB_VAL', shell=True, text=True,
                                    env=dict(JS_SPACE_ORB_VAL=s, **os.environ))
 
