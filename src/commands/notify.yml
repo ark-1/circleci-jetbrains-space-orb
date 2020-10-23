@@ -86,8 +86,9 @@ steps:
 
           elif cat /etc/issue | grep Alpine > /dev/null 2>&1; then
               echo "Checking For python3: Alpine"
+              command -v curl >/dev/null 2>&1 || { echo >&2 "JETBRAINS SPACE ORB ERROR: curl is required. Please install."; exit 1; }
               command -v python3 >/dev/null 2>&1 || { echo >&2 "JETBRAINS SPACE ORB ERROR: python3 is required. Please install."; exit 1; }
               return $?
           fi
         }
-        InstallPython && python3 \<<< "$python_script"
+        InstallPython && echo "$python_script" | python3
