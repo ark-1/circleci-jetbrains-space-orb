@@ -6,16 +6,8 @@ from typing import Optional, List
 
 
 def substitute_envs(s: str) -> str:
-    s = s \
-        .replace('"', '\\"') \
-        .replace('\\n', '\\\\n') \
-        .replace('|', '\\|') \
-        .replace('<', '\\<') \
-        .replace('>', '\\>') \
-        .replace('(', '\\(') \
-        .replace(')', '\\)')
-    return subprocess.check_output('eval echo -n $JS_SPACE_ORB_VAL', shell=True, universal_newlines=True,
-                                   env=dict(JS_SPACE_ORB_VAL=s, **os.environ))
+    import re
+    return re.sub('\\${([\\w]+)}', lambda match: os.getenv(match.group(1)), s)
 
 
 def build_message_body(custom: Optional[str], template: Optional[str]) -> str:
@@ -86,7 +78,6 @@ def post_to_jb_space(msg: str, channels: List[str], members: List[str], client_i
 def notify(custom: Optional[str], template: Optional[str], channels: List[str], members: List[str],
            client_id: bytes, client_secret: bytes, space_url: str, event: str,
            current_branch: str, branch_patterns: List[str]):
-    print("current job", os.getenv("CIRCLE_JOB"))
     with open('/tmp/JB_SPACE_JOB_STATUS', 'rt') as f:
         status = f.readline().strip()
     if status == event or event == "always":
