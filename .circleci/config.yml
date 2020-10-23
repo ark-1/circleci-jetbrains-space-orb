@@ -29,7 +29,6 @@ executors:
     macos:
       xcode: 11.7.0
   alpine:
-    # This image contains both CURL and JQ
     docker:
       - image: python:alpine
 
@@ -50,8 +49,6 @@ jobs:
         type: executor
         default: cimg
     executor: <<parameters.runner>>
-    docker:
-      - image: cimg/python:3.9.0
     steps:
       - checkout
       - jetbrains-space-orb/notify:
