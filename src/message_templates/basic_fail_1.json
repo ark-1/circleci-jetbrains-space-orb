@@ -18,7 +18,7 @@
           "fields": [
             {
               "className": "MessageField",
-              "first": "**Commiter**:",
+              "first": "**Committer**:",
               "second": "${CIRCLE_USERNAME}"
             },
             {

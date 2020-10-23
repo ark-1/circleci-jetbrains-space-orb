@@ -86,6 +86,7 @@ def post_to_jb_space(msg: str, channels: List[str], members: List[str], client_i
 def notify(custom: Optional[str], template: Optional[str], channels: List[str], members: List[str],
            client_id: bytes, client_secret: bytes, space_url: str, event: str,
            current_branch: str, branch_patterns: List[str]):
+    print("current job", os.getenv("CIRCLE_JOB"))
     with open('/tmp/JB_SPACE_JOB_STATUS', 'rt') as f:
         status = f.readline().strip()
     if status == event or event == "always":
