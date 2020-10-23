@@ -12,15 +12,16 @@ def substitute_envs(s: str) -> str:
         .replace('|', '\\|') \
         .replace('<', '\\<') \
         .replace('>', '\\>')
-    return subprocess.check_output('eval echo "$JS_SPACE_ORB_VAL"', shell=True, text=True, env={'JS_SPACE_ORB_VAL': s})
+    return subprocess.check_output('eval echo -n $JS_SPACE_ORB_VAL', shell=True, text=True,
+                                   env=dict(JS_SPACE_ORB_VAL=s, **os.environ))
 
 
 def build_message_body(custom: Optional[str], template: Optional[str]) -> str:
     if custom is not None:
         t2 = substitute_envs(custom)
     elif template is not None:
-        template_value = substitute_envs("$" + template)
-        if template_value == '':
+        template_value = os.getenv(template)
+        if template_value is None or template_value == '':
             raise ValueError("No such template:", template)
         t2 = substitute_envs(template_value)
     else:
@@ -55,26 +56,28 @@ def post_to_jb_space(msg: str, channels: List[str], members: List[str], client_i
     def send_msg(recipient):
         body = json.dumps({'recipient': recipient, 'content': msg_loaded})
         subprocess.check_output(
-            ['curl -s -f -X POST -H "Authorization: Bearer ' + token + '" -d', body,
-             space_url + '/api/http/chats/messages/send-message'],
+            'curl -s -f -X POST -H "Authorization: Bearer ' + token + '" -d \'' + body.replace("'", "'\\''") +
+            "' " + space_url + '/api/http/chats/messages/send-message',
             shell=True, text=True
         )
 
     for i in channels:
-        print('Sending to channel:', i)
+        channel = substitute_envs(i)
+        print('Sending to channel:', channel)
         send_msg({
             'className': 'MessageRecipient.Channel',
             'channel': {
                 'className': 'ChatChannel.FromName',
-                'name': i
+                'name': channel
             }
         })
 
     for i in members:
-        print('Sending to member:', i)
+        member = substitute_envs(i)
+        print('Sending to member:', member)
         send_msg({
             'className': 'MessageRecipient.Member',
-            'member': 'username:' + i
+            'member': 'username:' + member
         })
 
 
