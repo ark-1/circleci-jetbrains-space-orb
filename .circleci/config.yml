@@ -21,17 +21,6 @@ parameters:
     type: string
     default: "dev:alpha"
 
-executors:
-  cimg:
-    docker:
-      - image: cimg/base:stable
-  mac:
-    macos:
-      xcode: 11.7.0
-  alpine:
-    docker:
-      - image: python:alpine
-
 jobs:
   python_test:
     docker:
@@ -44,11 +33,8 @@ jobs:
 
   # Define one or more jobs which will utilize your orb's commands and parameters to validate your changes.
   integration-test-1:
-    parameters:
-      runner:
-        type: executor
-        default: cimg
-    executor: <<parameters.runner>>
+    docker:
+      - image: cimg/base:stable
     steps:
       - checkout
       - jetbrains-space-orb/notify:
@@ -99,10 +85,7 @@ workflows:
     when: << pipeline.parameters.run-integration-tests >>
     jobs:
       # Run any integration tests defined within the `jobs` key.
-      - integration-test-1:
-          matrix:
-            parameters:
-              runner: [ cimg, alpine ]
+      - integration-test-1
       # Publish a semver version of the orb. relies on
       # the commit subject containing the text "[semver:patch|minor|major|skip]"
       # as that will determine whether a patch, minor or major
