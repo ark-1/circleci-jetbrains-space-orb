@@ -102,7 +102,7 @@ workflows:
       - integration-test-1:
           matrix:
             parameters:
-              runner: [ cimg, mac, alpine ]
+              runner: [ cimg, alpine ]
       # Publish a semver version of the orb. relies on
       # the commit subject containing the text "[semver:patch|minor|major|skip]"
       # as that will determine whether a patch, minor or major
