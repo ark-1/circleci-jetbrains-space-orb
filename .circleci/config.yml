@@ -2,7 +2,7 @@ version: 2.1
 
 orbs:
   # Replace this with your own!
-  jetbrains-space-orb: ark-1/jetbrains-space-orb@<<pipeline.parameters.dev-orb-version>>
+  space: ark-1/jetbrains-space-orb@<<pipeline.parameters.dev-orb-version>>
   orb-tools: circleci/orb-tools@10.0
   shellcheck: circleci/shellcheck@2.0
 
@@ -37,8 +37,29 @@ jobs:
       - image: cimg/base:stable
     steps:
       - checkout
-      - jetbrains-space-orb/notify:
+      - space/notify:
+          event: always
+          custom: |
+            {
+              "className": "ChatMessage.Text",
+              "text": "Current Job: $CIRCLE_JOB"
+            }
+      - space/notify:
           template: basic_fail_1
+          event: always
+      - space/notify:
+          template: success_tagged_deploy_1
+          event: always
+      - space/notify:
+          template: basic_on_hold_1
+          event: always
+      - space/notify:
+          event: pass
+          custom: >
+            {
+               "className": "ChatMessage.Text",
+               "text": "Sample link using environment variable in markdown [LINK](${CIRCLE_BUILD_URL})"
+            }
 
 workflows:
   # Prior to producing a development orb (which requires credentials) basic validation, linting, and even unit testing can be performed.
