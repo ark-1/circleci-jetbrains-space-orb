@@ -87,7 +87,7 @@ def notify(custom: Optional[str], template: Optional[str], channels: List[str], 
            client_id: bytes, client_secret: bytes, space_url: str, event: str,
            current_branch: str, branch_patterns: List[str]):
     with open('/tmp/JB_SPACE_JOB_STATUS', 'rt') as f:
-        status = f.readline()
+        status = f.readline().strip()
     if status == event or event == "always":
         if not branch_filter(current_branch, branch_patterns):
             print("NO JB SPACE ALERT")
