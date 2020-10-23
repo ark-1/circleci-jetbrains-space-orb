@@ -14,7 +14,7 @@ def substitute_envs(s: str) -> str:
         .replace('>', '\\>') \
         .replace('(', '\\(') \
         .replace(')', '\\)')
-    return subprocess.check_output('eval echo -n $JS_SPACE_ORB_VAL', shell=True, text=True,
+    return subprocess.check_output('eval echo -n $JS_SPACE_ORB_VAL', shell=True, universal_newlines=True,
                                    env=dict(JS_SPACE_ORB_VAL=s, **os.environ))
 
 
@@ -46,7 +46,7 @@ def post_to_jb_space(msg: str, channels: List[str], members: List[str], client_i
         'curl -s -f -X POST -H "Authorization: Basic ' +
         base64.b64encode(client_id + b':' + client_secret).decode('UTF-8') +
         '" -d "grant_type=client_credentials&scope=**" ' + space_url + '/oauth/token',
-        shell=True, text=True
+        shell=True, universal_newlines=True
     )
     token: Optional[str] = json.loads(auth_response)['access_token']
     if token is None:
@@ -60,7 +60,7 @@ def post_to_jb_space(msg: str, channels: List[str], members: List[str], client_i
         subprocess.check_output(
             'curl -s -f -X POST -H "Authorization: Bearer ' + token + '" -d \'' + body.replace("'", "'\\''") +
             "' " + space_url + '/api/http/chats/messages/send-message',
-            shell=True, text=True
+            shell=True, universal_newlines=True
         )
 
     for i in channels:
