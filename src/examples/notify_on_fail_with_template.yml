@@ -6,7 +6,7 @@ description: |
 usage:
   version: 2.1
   orbs:
-    jetbrains-space: circleci/jetbrains-space@4.0
+    space: ark-1/jetbrains-space@1.0.0
     node: circleci/node:4.0
   jobs:
     deploy:
@@ -18,7 +18,7 @@ usage:
         - run:
             command: npm run deploy
         # If any of the above steps in this job (such as the deployment) have failed, this notification will be sent.
-        - jetbrains-space/notify:
+        - space/notify:
             event: fail
             template: basic_fail_1
             channel: ABCXYZ
@@ -26,5 +26,5 @@ usage:
     deploy_and_notify:
       jobs:
         - deploy:
-            # Secure your JetBrains OAuth credentials behind a restricted context
-            context: jetbrains-space-secrets
+            # Secure your JetBrains Space OAuth credentials behind a restricted context
+            context: jb-space-secrets

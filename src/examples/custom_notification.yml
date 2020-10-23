@@ -1,0 +1,35 @@
+description: |
+  Send a custom notification using HTTP API Playground UI Preview tab.
+  Create the payload code and paste "content" property value in your notify command's custom parameter.
+  <your Space instance URL>/httpApiPlayground?resource=chats_messages&endpoint=http_post_send-message
+usage:
+  version: 2.1
+  orbs:
+    space: ark-1/jetbrains-space-orb@1.0.0
+  jobs:
+    notify:
+      docker:
+        - image: cimg/base:stable
+      steps:
+        - space/notify:
+            event: always
+            custom: |
+              {
+                "className": "ChatMessage.Block",
+                "sections": [
+                  {
+                    "className": "MessageSection",
+                    "elements": [
+                      {
+                        "className": "MessageText",
+                        "content": "**This is a text notification**"
+                      }
+                    ]
+                  }
+                ]
+              }
+  workflows:
+    send-notification:
+      jobs:
+        - notify:
+            context: jb-space-secrets
