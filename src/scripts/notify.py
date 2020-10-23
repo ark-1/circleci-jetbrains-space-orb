@@ -7,7 +7,7 @@ from typing import Optional, List
 
 def substitute_envs(s: str) -> str:
     import re
-    return re.sub('\\${([\\w]+)}', lambda match: os.getenv(match.group(1)), s)
+    return re.sub('\\${([\\w]+)}|\\$([\\w]+)', lambda match: os.getenv(match.group(1) or match.group(2)), s)
 
 
 def build_message_body(custom: Optional[str], template: Optional[str]) -> str:
