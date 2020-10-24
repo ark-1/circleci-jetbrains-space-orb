@@ -76,9 +76,8 @@ The JetBrains Space Orb comes with a number of included templates to get your st
 
 Limit notifications to particular branches with the "branch_pattern" parameter.
 
-```
-A comma separated list of regex matchable branch names. Notifications will only be sent if sent from a job from these branches. By default ".+" will be used to match all branches. Pattern must match the full string, no partial matches.
-```
+Enter a comma separated list of regex matchable branch names. Notifications will only be sent if sent from a job from these branches. By default ".+" will be used to match all branches. Pattern must match the full string, no partial matches.
+
 
 See [usage examples](https://circleci.com/developer/orbs/orb/ark-1/jetbrains-space-orb#usage-examples).
 
