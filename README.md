@@ -1,7 +1,8 @@
 # JetBrains Space Orb [![CircleCI Build Status](https://circleci.com/gh/ark-1/jetbrains-space-orb.svg?style=shield "CircleCI Build Status")](https://circleci.com/gh/ark-1/jetbrains-space-orb) [![CircleCI Orb Version](https://img.shields.io/badge/endpoint.svg?url=https://badges.circleci.io/orb/ark-1/jetbrains-space-orb)](https://circleci.com/orbs/registry/orb/ark-1/jetbrains-space-orb) [![GitHub License](https://img.shields.io/badge/license-MIT-lightgrey.svg)](https://raw.githubusercontent.com/ark-1/jetbrains-space-orb/master/LICENSE) [![CircleCI Community](https://img.shields.io/badge/community-CircleCI%20Discuss-343434.svg)](https://discuss.circleci.com/c/ecosystem/orbs)
                       
 
-Send JetBrains Space chat notifications from your CircleCI pipelines even easier with JetBrains Space Orb
+Send JetBrains Space chat notifications from your CircleCI pipelines even easier with JetBrains Space Orb.
+Was largely based on [circleci/slack](https://github.com/CircleCI-Public/slack-orb) orb
 
 [What are Orbs?](https://circleci.com/orbs/)
 
