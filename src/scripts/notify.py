@@ -6,8 +6,17 @@ from typing import Optional, List
 
 
 def substitute_envs(s: str) -> str:
+    def replacement(var_name1: Optional[str], var_name2: Optional[str], expr: Optional[str]) -> str:
+        print(var_name1, var_name2, expr)
+        var_name = var_name1 or var_name2
+        if var_name is not None:
+            return os.getenv(var_name)
+        else:
+            return json.dumps(subprocess.check_output(expr, shell=True, universal_newlines=True, env=os.environ)
+                              .rstrip('\n'))[1:-1]
     import re
-    return re.sub('\\${([\\w]+)}|\\$([\\w]+)', lambda match: os.getenv(match.group(1) or match.group(2)), s)
+    return re.sub('\\${([\\w]+)\\b}|\\$([\\w]+)|\\$\\(([^)]+)\\)',
+                  lambda match: replacement(match.group(1), match.group(2), match.group(3)), s)
 
 
 def build_message_body(custom: Optional[str], template: Optional[str]) -> str:

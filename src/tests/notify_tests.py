@@ -3,7 +3,6 @@ from typing import Callable, Any
 
 import scripts.notify as notify
 
-
 branch_filters = ["master", "pr-[0-9]+"]
 
 
@@ -18,6 +17,20 @@ class MyTestCase(unittest.TestCase):
         print("Output:")
         print(out)
         self.assertIn("NO JB SPACE ALERT", out)
+
+    def test_substitutions(self):
+        import os
+        import json
+        os.environ["MY_VAR1"] = "VALUE1"
+        os.environ["MY_VAR2"] = "VALUE2"
+        msg = notify.build_message_body(custom=json.dumps({
+            "className": "ChatMessage.Text",
+            "text": "$(echo $'\naaa')  ${MY_VAR1} **${MY_VAR2}**"
+        }), template=None)
+        self.assertEqual({
+            "className": "ChatMessage.Text",
+            "text": "\naaa  VALUE1 **VALUE2**"
+        }, json.loads(msg))
 
     def test_branch_filter_match_all_default(self):
         match = notify.branch_filter('xyz-123', ['.+'])
