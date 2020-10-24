@@ -143,8 +143,8 @@ def main():
     notify(
         custom=if_not_empty(os.getenv("JB_SPACE_PARAM_CUSTOM")),
         template=if_not_empty(os.getenv("JB_SPACE_PARAM_TEMPLATE")),
-        channels=[] if channels != '' else map(str.strip, channels.split(',')),
-        profiles=[] if profiles != '' else map(str.strip, profiles.split(',')),
+        channels=[] if channels != '' else [str.strip(i) for i in channels.split(',')],
+        profiles=[] if profiles != '' else [str.strip(i) for i in profiles.split(',')],
         client_id=bytes(os.getenv("JB_SPACE_CLIENT_ID"), 'UTF-8'),
         client_secret=bytes(os.getenv("JB_SPACE_CLIENT_SECRET"), 'UTF-8'),
         space_url='https://' + remove_prefixes(os.getenv("JB_SPACE_URL"), prefixes=['https://', 'http://']),
