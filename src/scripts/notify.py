@@ -46,7 +46,7 @@ def build_message_body(custom: Optional[str], template: Optional[str]) -> str:
 def post_to_jb_space(msg: str, channels: List[str], profiles: List[str], client_id: bytes, client_secret: bytes,
                      space_url: str):
     if len(channels) == 0 and len(profiles) == 0:
-        print('No channel was provided. Enter value for JB_SPACE_DEFAULT_CHANNEL env var, '
+        print('No channel was provided. Enter value for $JB_SPACE_DEFAULT_CHANNEL env var, '
               '$JB_SPACE_DEFAULT_RECIPIENT_PROFILE env var, channel parameter, or recipient_profile parameter')
         return
 
@@ -74,8 +74,7 @@ def post_to_jb_space(msg: str, channels: List[str], profiles: List[str], client_
             print(response)
             raise ValueError(response['error_description'])
 
-    for i in channels:
-        channel = substitute_envs(i)
+    for channel in channels:
         print('Sending to channel:', channel)
         send_msg({
             'className': 'MessageRecipient.Channel',
@@ -85,8 +84,7 @@ def post_to_jb_space(msg: str, channels: List[str], profiles: List[str], client_
             }
         })
 
-    for i in profiles:
-        profile = substitute_envs(i)
+    for profile in profiles:
         print('Sending to profile:', profile)
         send_msg({
             'className': 'MessageRecipient.Member',
@@ -134,17 +132,22 @@ def remove_prefixes(s: str, prefixes: List[str]) -> str:
 
 
 def main():
-    channels = os.getenv("JB_SPACE_PARAM_CHANNEL") or ""
+    channels = os.getenv("JB_SPACE_PARAM_CHANNEL_NAME") or ""
     profiles = os.getenv("JB_SPACE_PARAM_RECIPIENT_PROFILE") or ""
     if channels == "$JB_SPACE_DEFAULT_CHANNEL" and profiles != "$JB_SPACE_DEFAULT_RECIPIENT_PROFILE":
         channels = ""
     elif channels != "$JB_SPACE_DEFAULT_CHANNEL" and profiles == "$JB_SPACE_DEFAULT_RECIPIENT_PROFILE":
         profiles = ""
+
+    if channels == "$JB_SPACE_DEFAULT_CHANNEL":
+        channels = os.getenv("JB_SPACE_DEFAULT_CHANNEL") or ""
+    if profiles == "$JB_SPACE_DEFAULT_RECIPIENT_PROFILE":
+        profiles = os.getenv("JB_SPACE_DEFAULT_RECIPIENT_PROFILE") or ""
     notify(
         custom=if_not_empty(os.getenv("JB_SPACE_PARAM_CUSTOM")),
         template=if_not_empty(os.getenv("JB_SPACE_PARAM_TEMPLATE")),
-        channels=[] if channels == '' else [str.strip(i) for i in channels.split(',')],
-        profiles=[] if profiles == '' else [str.strip(i) for i in profiles.split(',')],
+        channels=[] if channels == '' else [i.strip() for i in channels.split(',')],
+        profiles=[] if profiles == '' else [i.strip() for i in profiles.split(',')],
         client_id=bytes(os.getenv("JB_SPACE_CLIENT_ID"), 'UTF-8'),
         client_secret=bytes(os.getenv("JB_SPACE_CLIENT_SECRET"), 'UTF-8'),
         space_url='https://' + remove_prefixes(os.getenv("JB_SPACE_URL"), prefixes=['https://', 'http://']),
