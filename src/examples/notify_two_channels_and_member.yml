@@ -1,10 +1,10 @@
 description: |
-  Send a notification to two channels and a member simultaniously. This example uses a pre-included template.
+  Send a notification to two channels and a direct message to a person simultaniously. This example uses a pre-included template.
   By default, if no channel parameter is set, the $JB_SPACE_DEFAULT_CHANNEL value will be used,
-  and if no recipient_member parameters is set the $JB_SPACE_DEFAULT_RECIPIENT_MEMBER value will be used.
+  and if no recipient_profile parameters is set the $JB_SPACE_DEFAULT_RECIPIENT_PROFILE value will be used.
   At least one of them must be set.
   A channel name, or comma-separated list of channel names can be supplied via the "channel" parameter.
-  A member username, or comma-separated list of member usernames can be supplied via the "recipient_member" parameter.
+  A username, or comma-separated list of usernames can be supplied via the "recipient_profile" parameter.
 usage:
   version: 2.1
   orbs:
@@ -18,7 +18,7 @@ usage:
         - space/notify:
             event: always
             channel: ABCXYZ, ZXCVBN
-            recipient_member: alice
+            recipient_profile: alice
             custom: |
               {
                 "className": "ChatMessage.Block",

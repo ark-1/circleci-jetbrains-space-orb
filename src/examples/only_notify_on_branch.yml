@@ -19,8 +19,7 @@ usage:
             branch_pattern: production # A second alert to ping certain folks to failures on this branch.
             event: fail
             template: basic_fail_1
-            channel: ""
-            recipient_member: "max, bill1337"
+            recipient_profile: "max, bill1337"
   workflows:
     deploy_and_notify:
       jobs:

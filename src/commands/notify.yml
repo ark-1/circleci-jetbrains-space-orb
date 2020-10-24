@@ -35,13 +35,13 @@ parameters:
       Set the "JB_SPACE_DEFAULT_CHANNEL" environment variable for the default channel.
     type: string
     default: $JB_SPACE_DEFAULT_CHANNEL
-  recipient_member:
+  recipient_profile:
     description: |
-      Select username of member to whom to send notification. You may include a comma separated list of usernames if you
-      wish to send notifications to multiple members at once.
-      Set the "$JB_SPACE_DEFAULT_RECIPIENT_MEMBER" environment variable for the default recipient member.
+      Select username of person to whom to send notification. You may include a comma separated list of usernames if you
+      wish to send notifications to multiple people at once.
+      Set the "$JB_SPACE_DEFAULT_RECIPIENT_PROFILE" environment variable for the default recipient PROFILE.
     type: string
-    default: $JB_SPACE_DEFAULT_RECIPIENT_MEMBER
+    default: $JB_SPACE_DEFAULT_RECIPIENT_PROFILE
 
 steps:
   - run:
@@ -64,7 +64,7 @@ steps:
         # JB_SPACE_PARAM_MENTIONS: "<<parameters.mentions>>"
         JB_SPACE_PARAM_BRANCH_PATTERN: "<<parameters.branch_pattern>>"
         JB_SPACE_PARAM_CHANNEL_NAME: "<<parameters.channel>>"
-        JB_SPACE_PARAM_RECIPIENT_MEMBER: "<<parameters.recipient_member>>"
+        JB_SPACE_PARAM_RECIPIENT_PROFILE: "<<parameters.recipient_profile>>"
         # import pre-built templates using the orb-pack local script include.
         basic_fail_1: "<<include(message_templates/basic_fail_1.json)>>"
         success_tagged_deploy_1: "<<include(message_templates/success_tagged_deploy_1.json)>>"

@@ -31,13 +31,13 @@ parameters:
       Set the "JB_SPACE_DEFAULT_CHANNEL" environment variable for the default channel.
     type: string
     default: $JB_SPACE_DEFAULT_CHANNEL
-  recipient_member:
+  recipient_profile:
     description: |
-      Select username of member to whom to send notification. You may include a comma separated list of usernames if you
-      wish to send notifications to multiple members at once.
-      Set the "$JB_SPACE_DEFAULT_RECIPIENT_MEMBER" environment variable for the default recipient member.
+      Select username of a person to whom to send notification. You may include a comma separated list of usernames if you
+      wish to send notifications to multiple people at once.
+      Set the "$JB_SPACE_DEFAULT_RECIPIENT_PROFILE" environment variable for the default recipient profile.
     type: string
-    default: $JB_SPACE_DEFAULT_RECIPIENT_MEMBER
+    default: $JB_SPACE_DEFAULT_RECIPIENT_PROFILE
 
 docker:
   - image: cimg/base:stable
@@ -50,4 +50,4 @@ steps:
       branch_pattern: <<parameters.branch_pattern>>
       custom: <<parameters.custom>>
       channel: <<parameters.channel>>
-      recipient_member: <<parameters.recipient_member>>
+      recipient_profile: <<parameters.recipient_profile>>

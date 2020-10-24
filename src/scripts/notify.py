@@ -43,11 +43,11 @@ def build_message_body(custom: Optional[str], template: Optional[str]) -> str:
     return t2
 
 
-def post_to_jb_space(msg: str, channels: List[str], members: List[str], client_id: bytes, client_secret: bytes,
+def post_to_jb_space(msg: str, channels: List[str], profiles: List[str], client_id: bytes, client_secret: bytes,
                      space_url: str):
-    if len(channels) == 0 and len(members) == 0:
+    if len(channels) == 0 and len(profiles) == 0:
         print('No channel was provided. Enter value for JB_SPACE_DEFAULT_CHANNEL env var, '
-              '$JB_SPACE_DEFAULT_RECIPIENT_MEMBER env var, channel parameter, or recipient_member parameter')
+              '$JB_SPACE_DEFAULT_RECIPIENT_PROFILE env var, channel parameter, or recipient_profile parameter')
         return
 
     auth_response = subprocess.check_output(
@@ -85,16 +85,16 @@ def post_to_jb_space(msg: str, channels: List[str], members: List[str], client_i
             }
         })
 
-    for i in members:
-        member = substitute_envs(i)
-        print('Sending to member:', member)
+    for i in profiles:
+        profile = substitute_envs(i)
+        print('Sending to profile:', profile)
         send_msg({
             'className': 'MessageRecipient.Member',
-            'member': 'username:' + member
+            'member': 'username:' + profile
         })
 
 
-def notify(custom: Optional[str], template: Optional[str], channels: List[str], members: List[str],
+def notify(custom: Optional[str], template: Optional[str], channels: List[str], profiles: List[str],
            client_id: bytes, client_secret: bytes, space_url: str, event: str,
            current_branch: str, branch_patterns: List[str]):
     with open('/tmp/JB_SPACE_JOB_STATUS', 'rt') as f:
@@ -106,7 +106,7 @@ def notify(custom: Optional[str], template: Optional[str], channels: List[str], 
             print('Current branch:', current_branch)
         else:
             print('Sending notification')
-            post_to_jb_space(build_message_body(custom, template), channels, members,
+            post_to_jb_space(build_message_body(custom, template), channels, profiles,
                              client_id, client_secret, space_url)
     else:
         print("NO JB SPACE ALERT")
@@ -133,12 +133,18 @@ def remove_prefixes(s: str, prefixes: List[str]) -> str:
     return s
 
 
-if __name__ == '__main__':
+def main():
+    channels = os.getenv("JB_SPACE_PARAM_CHANNEL") or ""
+    profiles = os.getenv("JB_SPACE_PARAM_RECIPIENT_PROFILE") or ""
+    if channels == "$JB_SPACE_DEFAULT_CHANNEL" and profiles != "$JB_SPACE_DEFAULT_RECIPIENT_PROFILE":
+        channels = ""
+    elif channels != "$JB_SPACE_DEFAULT_CHANNEL" and profiles == "$JB_SPACE_DEFAULT_RECIPIENT_PROFILE":
+        profiles = ""
     notify(
         custom=if_not_empty(os.getenv("JB_SPACE_PARAM_CUSTOM")),
         template=if_not_empty(os.getenv("JB_SPACE_PARAM_TEMPLATE")),
-        channels=[i for i in (os.getenv("JB_SPACE_PARAM_CHANNEL") or '').split(',') if i != ''],
-        members=[i for i in (os.getenv("JB_SPACE_PARAM_RECIPIENT_MEMBER") or '').split(',') if i != ''],
+        channels=[] if channels != '' else map(str.strip, channels.split(',')),
+        profiles=[] if profiles != '' else map(str.strip, profiles.split(',')),
         client_id=bytes(os.getenv("JB_SPACE_CLIENT_ID"), 'UTF-8'),
         client_secret=bytes(os.getenv("JB_SPACE_CLIENT_SECRET"), 'UTF-8'),
         space_url='https://' + remove_prefixes(os.getenv("JB_SPACE_URL"), prefixes=['https://', 'http://']),
@@ -146,3 +152,7 @@ if __name__ == '__main__':
         current_branch=os.getenv("CIRCLE_BRANCH"),
         branch_patterns=os.getenv("JB_SPACE_PARAM_BRANCH_PATTERN").split(',')
     )
+
+
+if __name__ == '__main__':
+    main()

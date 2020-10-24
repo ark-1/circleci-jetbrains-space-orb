@@ -1,8 +1,8 @@
 description: |
   Send a notification when a job fails. This example uses a pre-included template. Custom templates can also be used.
   The channel parameter can be used to alert a specific JetBrains Space channel.
-  The recipient_member parameter can be used to to alert a specific member/
-  Ensure the "jetbrains-space/notify" command is the last command in a job to accurately capture the status.
+  The recipient_profile parameter can be used to to alert a specific person/
+  Ensure the "space/notify" command is the last command in a job to accurately capture the status.
 usage:
   version: 2.1
   orbs:

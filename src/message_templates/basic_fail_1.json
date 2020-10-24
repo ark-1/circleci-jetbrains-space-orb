@@ -11,7 +11,7 @@
             "className": "MessageImage",
             "src": "https://assets.brandfolder.com/otz5mn-bw4j2w-6jzqo8/original/circle-logo-badge-black.png"
           },
-          "content": "Your job **${CIRCLE_JOB}** has failed"
+          "content": "Your job **${CIRCLE_JOB}** has failed ⚠️"
         },
         {
           "className": "MessageFields",
