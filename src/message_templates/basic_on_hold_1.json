@@ -1,0 +1,43 @@
+{
+  "className": "ChatMessage.Block",
+  "style": "WARNING",
+  "sections": [
+    {
+      "className": "MessageSection",
+      "elements": [
+        {
+          "className": "MessageText",
+          "accessory": {
+            "className": "MessageImage",
+            "src": "https://assets.brandfolder.com/otz5mn-bw4j2w-6jzqo8/original/circle-logo-badge-black.png"
+          },
+          "content": "ON HOLD - Awaiting Approval ✋"
+        },
+        {
+          "className": "MessageFields",
+          "fields": [
+            {
+              "className": "MessageField",
+              "first": "**Project**:",
+              "second": "$CIRCLE_PROJECT_REPONAME"
+            },
+            {
+              "className": "MessageField",
+              "first": "**Branch**:",
+              "second": "$CIRCLE_BRANCH"
+            },
+            {
+              "className": "MessageField",
+              "first": "**Author**:",
+              "second": "$CIRCLE_USERNAME"
+            }
+          ]
+        },
+        {
+          "className": "MessageText",
+          "content": "[View Workflow](https://circleci.com/workflow-run/${CIRCLE_WORKFLOW_ID})"
+        }
+      ]
+    }
+  ]
+}

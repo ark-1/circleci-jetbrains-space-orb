@@ -1,0 +1,42 @@
+description: |
+  Send a notification to two channels and a direct message to a person simultaniously. This example uses a pre-included template.
+  By default, if no channel parameter is set, the $JB_SPACE_DEFAULT_CHANNEL value will be used,
+  and if no recipient_profile parameters is set the $JB_SPACE_DEFAULT_RECIPIENT_PROFILE value will be used.
+  At least one of them must be set.
+  A channel name, or comma-separated list of channel names can be supplied via the "channel" parameter.
+  A username, or comma-separated list of usernames can be supplied via the "recipient_profile" parameter.
+usage:
+  version: 2.1
+  orbs:
+    space: ark-1/jetbrains-space@1.0.0
+    node: circleci/node:4.0
+  jobs:
+    deploy:
+      executor:
+        name: node/default
+      steps:
+        - space/notify:
+            event: always
+            channel: ABCXYZ, ZXCVBN
+            recipient_profile: alice
+            custom: |
+              {
+                "className": "ChatMessage.Block",
+                "sections": [
+                  {
+                    "className": "MessageSection",
+                    "elements": [
+                      {
+                        "className": "MessageText",
+                        "content": "**This is a text notification**"
+                      }
+                    ]
+                  }
+                ]
+              }
+  workflows:
+    deploy_and_notify:
+      jobs:
+        - deploy:
+            # Secure your JetBrains Space OAuth access token behind a restricted context
+            context: jb-space-secrets
