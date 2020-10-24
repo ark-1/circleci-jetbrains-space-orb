@@ -6,14 +6,21 @@ from typing import Optional, List
 
 
 def substitute_envs(s: str) -> str:
+    shell = if_not_empty(
+        subprocess.check_output("command -v bash; exit 0", shell=True, universal_newlines=True).strip()
+    ) or subprocess.check_output("command -v sh", shell=True, universal_newlines=True)
+
     def replacement(var_name1: Optional[str], var_name2: Optional[str], expr: Optional[str]) -> str:
         print(var_name1, var_name2, expr)
         var_name = var_name1 or var_name2
         if var_name is not None:
             return os.getenv(var_name)
         else:
-            return json.dumps(subprocess.check_output(expr, shell=True, universal_newlines=True, env=os.environ)
-                              .rstrip('\n'))[1:-1]
+            value = subprocess \
+                .check_output([shell, '-c', expr], universal_newlines=True, env=os.environ) \
+                .rstrip('\n')
+            return json.dumps(value)[1:-1]
+
     import re
     return re.sub('\\${([\\w]+)\\b}|\\$([\\w]+)|\\$\\(([^)]+)\\)',
                   lambda match: replacement(match.group(1), match.group(2), match.group(3)), s)
@@ -58,11 +65,14 @@ def post_to_jb_space(msg: str, channels: List[str], members: List[str], client_i
 
     def send_msg(recipient):
         body = json.dumps({'recipient': recipient, 'content': msg_loaded, 'unfurlLinks': False})
-        subprocess.check_output(
-            'curl -s -f -X POST -H "Authorization: Bearer ' + token + '" -d \'' + body.replace("'", "'\\''") +
+        response = json.loads(subprocess.check_output(
+            'curl -X POST -H "Authorization: Bearer ' + token + '" -d \'' + body.replace("'", "'\\''") +
             "' " + space_url + '/api/http/chats/messages/send-message',
             shell=True, universal_newlines=True
-        )
+        ))
+        if 'error' in response:
+            print(response)
+            raise ValueError(response['error_description'])
 
     for i in channels:
         channel = substitute_envs(i)
